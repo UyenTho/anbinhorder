@@ -5,7 +5,14 @@ let socket: Socket | null = null;
 
 export function getSocket(): Socket {
   if (!socket) {
-    socket = io(API_URL, { autoConnect: true, transports: ["websocket", "polling"] });
+    socket = io(API_URL, {
+      autoConnect: true,
+      transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1500,
+      reconnectionDelayMax: 8000,
+    });
   }
   return socket;
 }

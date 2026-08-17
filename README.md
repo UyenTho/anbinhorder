@@ -24,25 +24,41 @@ qr-menu-app/
 
 Yêu cầu: đã cài [Node.js](https://nodejs.org) bản 18 trở lên.
 
+⚠️ **Bắt buộc phải chạy CẢ backend (server) LẪN frontend (client) cùng lúc.**
+Nếu chỉ mở `client` mà quên bật `server`, khách sẽ không gửi được món (lỗi
+`ERR_CONNECTION_REFUSED` khi gọi `localhost:4000`) và trang bếp sẽ không tải
+được đơn hàng — đây gần như luôn là nguyên nhân của lỗi đó.
+
+**Cách dễ nhất — chạy 1 lệnh duy nhất ở thư mục gốc `qr-menu-app`:**
+
 ```bash
-# 1. Cài & chạy backend
-cd server
-cp .env.example .env
-npm install
-npm run dev
+cd qr-menu-app
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+npm install            # cài concurrently ở gốc
+npm run install:all    # cài cho cả server và client
+npm run dev            # chạy song song cả server (:4000) và client (:5173)
+```
+
+Mở trình duyệt: `http://localhost:5173`.
+
+**Hoặc chạy tách riêng 2 terminal (nếu muốn xem log riêng từng bên):**
+
+```bash
+# Terminal 1
+cd server && cp .env.example .env && npm install && npm run dev
 # Backend chạy tại http://localhost:4000
 
-# 2. Ở terminal khác, cài & chạy frontend
-cd client
-cp .env.example .env
-npm install
-npm run dev
+# Terminal 2
+cd client && cp .env.example .env && npm install && npm run dev
 # Mở trình duyệt: http://localhost:5173
 ```
 
 Vào `http://localhost:5173/?table=1` để xem thực đơn của "Bàn 1".
-Vào `http://localhost:5173/admin` để đăng nhập trang quản lý
-(mật khẩu mặc định: `anbinh2026`, đổi trong `server/.env`).
+Vào `http://localhost:5173/admin` (hoặc `/kitchen`) để đăng nhập **trang
+Bếp / Quản lý** — nơi nhận thông báo có chuông khi khách gọi món, và có nút
+**"Mã QR bàn"** để tạo/in mã QR cho 10 bàn (mật khẩu mặc định: `anbinh2026`,
+đổi trong `server/.env`).
 
 ---
 
@@ -169,7 +185,48 @@ Sửa xong, đẩy code lên GitHub — Vercel sẽ tự động build & deploy 
 
 ---
 
-## 9. Giới hạn hiện tại (có thể nâng cấp thêm)
+## 9. Xử lý lỗi thường gặp
+
+### `Failed to load resource: net::ERR_CONNECTION_REFUSED` tại `localhost:4000`
+
+Nghĩa là trình duyệt gọi tới backend nhưng không ai đang lắng nghe ở cổng đó.
+Kiểm tra theo thứ tự:
+
+1. **Server đã bật chưa?** Ở thư mục `server`, chạy `npm run dev` — phải thấy
+   dòng `✅ An Binh menu server đang chạy tại http://localhost:4000`. Nếu chưa
+   chạy, `client` sẽ không bao giờ gửi được đơn — đây là nguyên nhân phổ biến
+   nhất.
+2. **Đang chạy đúng cả 2 chưa?** Dùng `npm run dev` ở thư mục gốc để chạy
+   song song cả hai, tránh quên bật một bên (xem mục 1).
+3. **Đã deploy thật (không phải chạy local) nhưng vẫn thấy `localhost:4000`?**
+   Nghĩa là biến môi trường `VITE_API_URL` trên Vercel chưa được đặt (hoặc đặt
+   sai) — client sẽ tự động dùng `localhost:4000` làm mặc định khi thiếu biến
+   này. Vào **Vercel → Project → Settings → Environment Variables**, thêm
+   `VITE_API_URL` trỏ đúng URL server đã deploy (vd
+   `https://an-binh-server.onrender.com`), rồi **Redeploy** lại.
+4. Khi mất kết nối, trang khách và trang bếp sẽ tự hiện **banner cảnh báo màu
+   đỏ** ở đầu trang — nếu không thấy banner này mà vẫn lỗi, có thể do CORS
+   hoặc sai URL, kiểm tra lại đúng địa chỉ trong `VITE_API_URL`.
+
+### Không thấy "trang bếp" / bị đá về lại trang đăng nhập
+
+Trang bếp chính là `/admin` (đăng nhập) → `/admin/dashboard` (bảng đơn hàng
+có chuông báo), hoặc vào tắt qua đường dẫn ngắn `/kitchen`. Ở bản trước, nếu
+mất kết nối server ngay sau khi đăng nhập, hệ thống sẽ tự đăng xuất khiến
+tưởng nhầm là "không có trang bếp" — lỗi này đã được sửa: giờ chỉ đăng xuất
+khi **sai mật khẩu**, còn mất kết nối sẽ hiện banner đỏ và tự tải lại đơn khi
+server kết nối được trở lại.
+
+### Không thấy mã QR
+
+Mã QR nằm trong trang Bếp / Quản lý: đăng nhập `/admin` → bấm nút **"Mã QR
+bàn"** ở góc trên (hoặc vào thẳng `/admin/qrcodes` sau khi đăng nhập). Trang
+này chỉ tải được sau khi đăng nhập thành công, nên nếu bước đăng nhập đang bị
+lỗi kết nối (mục trên), hãy xử lý lỗi đó trước.
+
+---
+
+## 10. Giới hạn hiện tại (có thể nâng cấp thêm)
 
 - Dữ liệu đơn hàng lưu trong 1 file JSON trên server (đủ dùng cho quán vừa
   và nhỏ). Muốn lưu lâu dài, nhiều dữ liệu, nên chuyển sang cơ sở dữ liệu

@@ -20,6 +20,9 @@ export function TablePicker() {
             </button>
           ))}
         </div>
+        <button className="ab-picker__staff-link" onClick={() => navigate("/kitchen")}>
+          Nhân viên bếp / quản lý bấm vào đây →
+        </button>
       </div>
     </div>
   );

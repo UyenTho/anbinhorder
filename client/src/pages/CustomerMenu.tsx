@@ -12,10 +12,13 @@ import { CartDrawer } from "../components/CartDrawer";
 import { OrderSuccessModal } from "../components/OrderSuccessModal";
 import { submitOrder } from "../lib/api";
 import { TablePicker } from "./TablePicker";
+import { ConnectionBanner } from "../components/ConnectionBanner";
+import { useServerStatus } from "../hooks/useServerStatus";
 import "./CustomerMenu.css";
 
 function CustomerMenuInner({ tableId }: { tableId: number }) {
   const { lines, addItem, clearCart } = useCart();
+  const serverStatus = useServerStatus();
   const [activeCategory, setActiveCategory] = useState(menu[0].id);
   const [sheetItem, setSheetItem] = useState<MenuItem | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
@@ -79,6 +82,7 @@ function CustomerMenuInner({ tableId }: { tableId: number }) {
   return (
     <div className="ab-page">
       <Header tableId={tableId} />
+      <ConnectionBanner status={serverStatus} />
       <CategoryNav activeId={activeCategory} onSelect={scrollToCategory} />
 
       <main className="ab-main">

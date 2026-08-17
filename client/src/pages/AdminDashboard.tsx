@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../context/AdminAuthContext";
-import { fetchOrders, updateOrderStatus, clearOrders } from "../lib/api";
+import { fetchOrders, updateOrderStatus, clearOrders, AuthError } from "../lib/api";
 import { getSocket } from "../lib/socket";
 import { Order, OrderStatus } from "../types";
 import { formatDateTime, formatPrice } from "../lib/format";
+import { useServerStatus } from "../hooks/useServerStatus";
+import { ConnectionBanner } from "../components/ConnectionBanner";
 import "./AdminDashboard.css";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
@@ -26,6 +28,7 @@ const TABLE_COUNT = 10;
 export function AdminDashboard() {
   const { password, logout } = useAdminAuth();
   const navigate = useNavigate();
+  const serverStatus = useServerStatus();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [tableFilter, setTableFilter] = useState<number | "all">("all");
@@ -41,9 +44,14 @@ export function AdminDashboard() {
     try {
       const res = await fetchOrders(password);
       setOrders(res.orders);
-    } catch {
-      logout();
-      navigate("/admin");
+    } catch (e) {
+      // Chỉ đăng xuất khi thật sự sai mật khẩu (401). Nếu là lỗi mất kết nối
+      // (server chưa bật, sập mạng...) thì giữ nguyên trang, banner cảnh báo
+      // ở trên sẽ báo cho người dùng, và trang sẽ tự tải lại khi có mạng lại.
+      if (e instanceof AuthError) {
+        logout();
+        navigate("/admin");
+      }
     } finally {
       setLoading(false);
     }
@@ -56,6 +64,14 @@ export function AdminDashboard() {
     }
     load();
   }, [password, load, navigate]);
+
+  // Tự tải lại danh sách đơn ngay khi kết nối tới server được khôi phục
+  useEffect(() => {
+    if (serverStatus === "connected" && password) {
+      load();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverStatus]);
 
   useEffect(() => {
     const socket = getSocket();
@@ -141,9 +157,11 @@ export function AdminDashboard() {
     <div className="ab-admin">
       <audio ref={audioRef} src="/sounds/bell.wav" preload="auto" />
 
+      <ConnectionBanner status={serverStatus} />
+
       <header className="ab-admin__header">
         <div>
-          <span className="ab-admin__eyebrow">Vườn Sinh Thái An Bình</span>
+          <span className="ab-admin__eyebrow">Vườn Sinh Thái An Bình · Trang Bếp / Quản lý</span>
           <h1>Đơn đặt món ({pendingCount} đang chờ)</h1>
         </div>
         <div className="ab-admin__actions">

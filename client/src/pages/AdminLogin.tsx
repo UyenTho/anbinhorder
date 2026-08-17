@@ -31,9 +31,9 @@ export function AdminLogin() {
   return (
     <div className="ab-adminlogin">
       <form className="ab-adminlogin__card" onSubmit={handleSubmit}>
-        <span className="ab-adminlogin__eyebrow">Quản lý quán</span>
+        <span className="ab-adminlogin__eyebrow">Trang Bếp / Quản lý</span>
         <h1>Vườn Sinh Thái An Bình</h1>
-        <p>Đăng nhập để xem đơn đặt món từ khách hàng</p>
+        <p>Đăng nhập để xem đơn khách vừa gọi món, nghe chuông báo đơn mới và in mã QR cho từng bàn.</p>
         <input
           type="password"
           placeholder="Mật khẩu quản lý"
