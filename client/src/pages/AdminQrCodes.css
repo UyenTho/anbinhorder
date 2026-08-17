@@ -1,0 +1,120 @@
+.ab-qrpage {
+  flex: 1;
+  background: var(--color-paper);
+}
+
+.ab-qrpage__toolbar {
+  padding: 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--color-paper-dark);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.ab-qrpage__back {
+  border: none;
+  background: transparent;
+  color: var(--color-forest);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 0 0 8px;
+}
+
+.ab-qrpage__toolbar h1 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.ab-qrpage__toolbar p {
+  font-size: 12.5px;
+  color: var(--color-ink-soft);
+  max-width: 420px;
+}
+
+.ab-qrpage__url-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 260px;
+}
+
+.ab-qrpage__url-row label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+
+.ab-qrpage__url-row input {
+  border: 1.5px solid var(--color-paper-dark);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 13.5px;
+}
+
+.ab-qrpage__url-row button {
+  background: var(--color-forest);
+  color: var(--color-paper);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.ab-qrpage__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 24px;
+}
+
+.ab-qrcard {
+  background: #fffdf8;
+  border: 1.5px dashed var(--color-wood);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  break-inside: avoid;
+}
+
+.ab-qrcard__eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-wood);
+  font-weight: 700;
+}
+
+.ab-qrcard h2 {
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.ab-qrcard p {
+  font-size: 10.5px;
+  color: var(--color-ink-soft);
+  word-break: break-all;
+}
+
+@media print {
+  .ab-qrpage__toolbar {
+    display: none;
+  }
+  .ab-header,
+  .ab-catnav {
+    display: none;
+  }
+  .ab-qrpage__grid {
+    padding: 0;
+  }
+  .ab-qrcard {
+    border: 1.5px dashed #333;
+    box-shadow: none;
+  }
+}
