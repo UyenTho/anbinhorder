@@ -13,7 +13,18 @@
   text-align: center;
   font-size: 11.5px;
   color: var(--color-ink-soft);
-  padding: 10px 24px 20px;
+  padding: 10px 24px 4px;
+}
+
+.ab-staff-link {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-forest-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0 24px 24px;
 }
 
 .ab-error-toast {

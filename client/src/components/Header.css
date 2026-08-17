@@ -40,6 +40,22 @@
   line-height: 1.1;
 }
 
+.ab-header__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ab-header__exit {
+  border: 1.5px solid rgba(246, 239, 220, 0.35);
+  background: rgba(246, 239, 220, 0.08);
+  color: var(--color-paper);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
 .ab-header__table {
   display: flex;
   flex-direction: column;

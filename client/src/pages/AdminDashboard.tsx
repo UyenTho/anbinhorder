@@ -28,7 +28,7 @@ const TABLE_COUNT = 10;
 export function AdminDashboard() {
   const { password, logout } = useAdminAuth();
   const navigate = useNavigate();
-  const serverStatus = useServerStatus();
+  const { status: serverStatus, retry: retryConnection } = useServerStatus();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [tableFilter, setTableFilter] = useState<number | "all">("all");
@@ -157,7 +157,7 @@ export function AdminDashboard() {
     <div className="ab-admin">
       <audio ref={audioRef} src="/sounds/bell.wav" preload="auto" />
 
-      <ConnectionBanner status={serverStatus} />
+      <ConnectionBanner status={serverStatus} onRetry={retryConnection} />
 
       <header className="ab-admin__header">
         <div>

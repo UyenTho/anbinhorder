@@ -1,0 +1,19 @@
+[
+  {
+    "id": "1786974079302-9ib0to",
+    "tableId": 1,
+    "items": [
+      {
+        "itemId": "trung-vit-bach-thao",
+        "name": "Nấu rau tập tàng / rau dền",
+        "price": 90000,
+        "quantity": 1,
+        "note": ""
+      }
+    ],
+    "note": "",
+    "status": "moi",
+    "createdAt": "2026-08-17T13:41:19.302Z",
+    "updatedAt": "2026-08-17T13:41:19.302Z"
+  }
+]

@@ -1,0 +1,56 @@
+.ab-thankyou {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg, var(--color-forest) 0%, #14261b 100%);
+  min-height: 100dvh;
+}
+
+.ab-thankyou__card {
+  background: #fffdf8;
+  border-radius: var(--radius-lg);
+  padding: 40px 28px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-pop);
+  animation: ab-pop-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ab-thankyou__icon {
+  font-size: 44px;
+  margin-bottom: 10px;
+}
+
+.ab-thankyou__eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-wood);
+  font-weight: 700;
+}
+
+.ab-thankyou__card h1 {
+  font-size: 26px;
+  margin: 8px 0 14px;
+}
+
+.ab-thankyou__card p {
+  font-size: 14.5px;
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.ab-thankyou__back {
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid var(--color-paper-dark);
+  color: var(--color-forest);
+  border-radius: var(--radius-sm);
+  padding: 13px;
+  font-weight: 700;
+  font-size: 13.5px;
+}

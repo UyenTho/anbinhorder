@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { menu } from "../data/menu";
 import { MenuItem } from "../types";
 import { CartProvider, useCart } from "../context/CartContext";
@@ -10,6 +10,7 @@ import { AddItemSheet } from "../components/AddItemSheet";
 import { CartBar } from "../components/CartBar";
 import { CartDrawer } from "../components/CartDrawer";
 import { OrderSuccessModal } from "../components/OrderSuccessModal";
+import { ThankYouScreen } from "../components/ThankYouScreen";
 import { submitOrder } from "../lib/api";
 import { TablePicker } from "./TablePicker";
 import { ConnectionBanner } from "../components/ConnectionBanner";
@@ -18,12 +19,14 @@ import "./CustomerMenu.css";
 
 function CustomerMenuInner({ tableId }: { tableId: number }) {
   const { lines, addItem, clearCart } = useCart();
-  const serverStatus = useServerStatus();
+  const { status: serverStatus, retry: retryConnection } = useServerStatus();
   const [activeCategory, setActiveCategory] = useState(menu[0].id);
   const [sheetItem, setSheetItem] = useState<MenuItem | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [exited, setExited] = useState(false);
+  const [hasOrdered, setHasOrdered] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -71,6 +74,7 @@ function CustomerMenuInner({ tableId }: { tableId: number }) {
       clearCart();
       setCartOpen(false);
       setSuccess(true);
+      setHasOrdered(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Không gửi được đơn, vui lòng thử lại");
       setTimeout(() => setError(null), 4000);
@@ -79,10 +83,24 @@ function CustomerMenuInner({ tableId }: { tableId: number }) {
     }
   }
 
+  function handleHeaderExit() {
+    if (lines.length > 0) {
+      const ok = confirm(
+        "Bạn có món trong giỏ chưa gửi cho bếp. Thoát ra sẽ không mất giỏ hàng, bạn có thể quay lại gọi tiếp sau. Vẫn thoát?"
+      );
+      if (!ok) return;
+    }
+    setExited(true);
+  }
+
+  if (exited) {
+    return <ThankYouScreen tableId={tableId} hasOrdered={hasOrdered} onBack={() => setExited(false)} />;
+  }
+
   return (
     <div className="ab-page">
-      <Header tableId={tableId} />
-      <ConnectionBanner status={serverStatus} />
+      <Header tableId={tableId} onExit={handleHeaderExit} />
+      <ConnectionBanner status={serverStatus} onRetry={retryConnection} />
       <CategoryNav activeId={activeCategory} onSelect={scrollToCategory} />
 
       <main className="ab-main">
@@ -97,6 +115,9 @@ function CustomerMenuInner({ tableId }: { tableId: number }) {
           />
         ))}
         <p className="ab-footnote">Món ăn theo thời giá sẽ được nhân viên báo giá cụ thể khi lên món.</p>
+        <Link to="/admin" className="ab-staff-link">
+          Nhân viên bếp / quản lý →
+        </Link>
       </main>
 
       {error && <div className="ab-error-toast">{error}</div>}
@@ -111,7 +132,15 @@ function CustomerMenuInner({ tableId }: { tableId: number }) {
         <CartDrawer onClose={() => setCartOpen(false)} onSubmit={handleSubmit} submitting={submitting} />
       )}
 
-      {success && <OrderSuccessModal onClose={() => setSuccess(false)} />}
+      {success && (
+        <OrderSuccessModal
+          onOrderMore={() => setSuccess(false)}
+          onExit={() => {
+            setSuccess(false);
+            setExited(true);
+          }}
+        />
+      )}
     </div>
   );
 }

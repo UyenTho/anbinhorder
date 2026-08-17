@@ -205,8 +205,9 @@ Kiểm tra theo thứ tự:
    `VITE_API_URL` trỏ đúng URL server đã deploy (vd
    `https://an-binh-server.onrender.com`), rồi **Redeploy** lại.
 4. Khi mất kết nối, trang khách và trang bếp sẽ tự hiện **banner cảnh báo màu
-   đỏ** ở đầu trang — nếu không thấy banner này mà vẫn lỗi, có thể do CORS
-   hoặc sai URL, kiểm tra lại đúng địa chỉ trong `VITE_API_URL`.
+   đỏ** ở đầu trang kèm nút **"Thử kết nối lại"** — bấm để kiểm tra lại ngay
+   mà không cần tải lại trang. Trang cũng tự dò kết nối lại mỗi 6 giây khi
+   đang mất kết nối, nên khi bật server lên, trang sẽ tự khôi phục.
 
 ### Không thấy "trang bếp" / bị đá về lại trang đăng nhập
 
@@ -223,6 +224,14 @@ Mã QR nằm trong trang Bếp / Quản lý: đăng nhập `/admin` → bấm n�
 bàn"** ở góc trên (hoặc vào thẳng `/admin/qrcodes` sau khi đăng nhập). Trang
 này chỉ tải được sau khi đăng nhập thành công, nên nếu bước đăng nhập đang bị
 lỗi kết nối (mục trên), hãy xử lý lỗi đó trước.
+
+### Không thấy màn hình "Thoát" / lời cảm ơn sau khi gọi món
+
+Sau khi bấm **"Gửi món cho bếp"** thành công, một hộp thoại hiện lên với 2
+nút: **"Gọi thêm món"** (quay lại thực đơn để đặt tiếp) và **"Thoát"** (hiện
+màn hình cảm ơn, chúc ngon miệng toàn màn hình). Nếu muốn xem lại thực đơn từ
+màn hình Thoát, bấm nút **"Xem lại thực đơn / gọi thêm món"** ở cuối màn hình
+đó.
 
 ---
 

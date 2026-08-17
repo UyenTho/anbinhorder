@@ -35,11 +35,22 @@
 }
 
 .ab-success button {
-  background: var(--color-forest);
-  color: var(--color-paper);
+  width: 100%;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 12px 24px;
+  padding: 13px 24px;
   font-weight: 700;
   font-size: 14px;
+}
+
+.ab-success__primary {
+  background: var(--color-forest);
+  color: var(--color-paper);
+  margin-bottom: 10px;
+}
+
+.ab-success__secondary {
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-weight: 600;
 }
