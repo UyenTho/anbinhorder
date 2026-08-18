@@ -18,3 +18,18 @@ export function formatDateTime(iso: string): string {
     minute: "2-digit",
   });
 }
+
+/** True nếu thời điểm iso rơi vào ngày hôm nay (theo giờ địa phương của thiết bị). */
+export function isToday(iso: string): boolean {
+  const d = new Date(iso);
+  const now = new Date();
+  return (
+    d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth() &&
+    d.getDate() === now.getDate()
+  );
+}
+
+export function formatCurrency(amount: number): string {
+  return amount.toLocaleString("vi-VN") + "đ";
+}

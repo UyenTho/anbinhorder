@@ -7,6 +7,7 @@ import { Order, OrderStatus } from "../types";
 import { formatDateTime, formatPrice } from "../lib/format";
 import { useServerStatus } from "../hooks/useServerStatus";
 import { ConnectionBanner } from "../components/ConnectionBanner";
+import { RevenueStats } from "../components/RevenueStats";
 import "./AdminDashboard.css";
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
@@ -191,6 +192,8 @@ export function AdminDashboard() {
           </button>
         </div>
       </header>
+
+      <RevenueStats orders={orders} />
 
       <div className="ab-admin__filters">
         <button
